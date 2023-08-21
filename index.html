@@ -48,22 +48,7 @@
         </div>
       </div>
       <div class="row" id="card-section">
-        <div class="col s4 center-align">
-          <div class="card medium">
-            <div class="card-image waves-effect waves-block waves-light">
-              <img class="activator" src="images/Image1.jpeg" alt="Image">
-            </div>
-            <div class="card-content">
-              <span class="card-title activator grey-text text-darken-4">Dog 01<i
-                  class="material-icons right">more_vert</i></span>
-              <p><a href="#">About Dogs</a></p>
-            </div>
-            <div class="card-reveal">
-              <span class="card-title grey-text text-darken-4">Dog 02<i class="material-icons right">close</i></span>
-              <p class="card-text">Hello</p>
-            </div>
-          </div>
-        </div>
+        
       </div>
     </div>
     <!-- Modal Structure -->
@@ -72,24 +57,18 @@
         <form class="col s12">
           <div class="row">
             <div class="input-field col s6">
-              <input placeholder="Placeholder" id="first_name" type="text" class="validate">
-              <label for="first_name">First Name</label>
+              <input placeholder="Placeholder" id="title" type="text" class="validate">
+              <label for="title">Title</label>
             </div>
             <div class="input-field col s6">
-              <input id="last_name" type="text" class="validate">
-              <label for="last_name">Last Name</label>
+              <input id="sub_title" type="text" class="validate">
+              <label for="sub_title">Sub Title</label>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s12">
-              <input id="password" type="password" class="validate">
-              <label for="password">Password</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s12">
-              <input id="email" type="email" class="validate">
-              <label for="email">Email</label>
+              <input id="image_path" type="text" class="validate">
+              <label for="image_path">Image Path</label>
             </div>
           </div>
           <div class="row">
@@ -107,33 +86,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="script.js"></script>
 
-
-  <script>
-    $(document).ready(function () {
-      $("#clickMeButton").click(function () {
-        const dogData = {
-          name: "New Dog",
-          breed: "Unknown"
-          // Add other properties as needed
-        };
-
-        $.ajax({
-          type: "POST",
-          url: "/add-dog",
-          data: dogData,
-          dataType: "json",
-          success: function (response) {
-            console.log(response);
-            alert("Dog data added successfully");
-          },
-          error: function (error) {
-            console.error(error);
-            alert("Failed to add dog data");
-          }
-        });
-      });
-    });
-  </script>
 </body>
 
 </html>

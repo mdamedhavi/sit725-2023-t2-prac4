@@ -1,21 +1,16 @@
 var express = require("express");
-const res = require("express/lib/response");
-const fs = require("fs");
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const path = require("path");
 
 var app = express()
 var port = process.env.port || 3000;
 
-app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use(express.static(path.join(__dirname, '/')));
+app.use(express.static(__dirname + '/'));
+app.use(express.urlencoded({extended: false}));
 app.use(express.json());
-
 
 // START - MongoDB Implementation ========================================================================
 
 const uri = "mongodb+srv://DewniManamperi:ASHAra99@sit725.09sxxbx.mongodb.net/?retryWrites=true&w=majority";
-// const uri = "mongodb+srv://DewniManamperi:ASHAra99@sit725.zbfbdgn.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {
     serverApi: {
         version: ServerApiVersion.v1,
@@ -23,8 +18,8 @@ const client = new MongoClient(uri, {
         deprecationErrors: true,
     }
 });
+
 async function connectToMongoDB() {
-    console.log('working...')
     try {
         await client.connect();
         console.log("Successfully connected to MongoDB!");
@@ -33,24 +28,19 @@ async function connectToMongoDB() {
     }
 }
 
-connectToMongoDB();
 
 // Add a new dog document
-app.get("/mongo-add-dog", async (req, res) => {
-    const newDog = {
-        title: 'Test Dog 1',
-        sub_title: 'SubT Dog 1',
-        image_path: 'no_image.png',
-    }
+app.post("/mongo-add-dog", (req, res) => {
+    const formData = req.body;
 
     const db = client.db("sit_725");
     const dogsCollection = db.collection("dogs");
     try {
-        const result = await dogsCollection.insertOne(newDog);
-        res.status(201).json({ message: "Dog added successfully", dog: result });
+        const result = dogsCollection.insertOne(formData);
+        res.status(201).json({ message: "Dog added successfully!", dog: result });
+
     } catch (err) {
-        console.error("Error adding new dog:", err);
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ error: "Internal server error!" });
     }
 });
 
@@ -59,11 +49,11 @@ app.get("/mongo-all-dogs", async (req, res) => {
     const db = client.db("sit_725");
     const dogsCollection = db.collection("dogs");
     try {
-        const dogs = await dogsCollection.find().toArray();
-        res.json(dogs);
+        const dogs = await dogsCollection.find({}).toArray();
+        res.status(200).json(dogs);
+
     } catch (err) {
-        console.error("Error fetching dogs:", err);
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ error: "Internal server error!" });
     }
 });
 // END - MongoDB Implementation ==========================================================================
@@ -106,17 +96,20 @@ app.post('/calculate', (req, res) => {
 
 
 app.get("/", (req, res) => {
-    const indexPath = path.join(__dirname, "index.html");
+    // const indexPath = path.join(__dirname, "index.html");
 
-    fs.readFile(indexPath, "utf8", (err, data) => {
-        if (err) {
-            return res.status(500).send("Error reading HTML file");
-        }
-        res.send(data);
-    });
+    res.render('index.html');
+
+    // fs.readFile(indexPath, "utf8", (err, data) => {
+    //     if (err) {
+    //         return res.status(500).send("Error reading HTML file");
+    //     }
+    //     res.send(data);
+    // });
 });
 
 
 app.listen(port, () => {
     console.log(`App listening to http://localhost:${port}`);
+    connectToMongoDB();
 });
